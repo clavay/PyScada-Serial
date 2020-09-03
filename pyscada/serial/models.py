@@ -26,7 +26,7 @@ class SerialDevice(models.Model):
     bytesize = models.PositiveSmallIntegerField(default=0, choices=bytesize_choices)
     parity_choices = ((0, 'default'), (1, 'NONE'), (2, 'EVEN'), (3, 'ODD'),)
     parity = models.PositiveSmallIntegerField(default=0, choices=parity_choices)
-    baudrate = models.PositiveSmallIntegerField(default=0, help_text="0 use default")
+    baudrate = models.PositiveIntegerField(default=0, help_text="0 use default")
 
     def __str__(self):
         return self.serial_device.short_name
