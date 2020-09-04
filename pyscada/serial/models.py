@@ -27,6 +27,7 @@ class SerialDevice(models.Model):
     parity_choices = ((0, 'default'), (1, 'NONE'), (2, 'EVEN'), (3, 'ODD'),)
     parity = models.PositiveSmallIntegerField(default=0, choices=parity_choices)
     baudrate = models.PositiveIntegerField(default=0, help_text="0 use default")
+    instrument = models.ForeignKey('SerialDeviceHandler', null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.serial_device.short_name
@@ -39,7 +40,7 @@ class SerialVariable(models.Model):
                                        help_text='name of the Property the variable be assigned to')
 
     def __str__(self):
-        return self.id.__str__() + "-" + self.wserial_variable.short_name
+        return self.id.__str__() + "-" + self.serial_variable.short_name
 
 
 @python_2_unicode_compatible
