@@ -34,7 +34,7 @@ class GenericDevice:
                                   timeout=self._device.serialdevice.timeout,
                                   write_timeout=self._device.serialdevice.timeout)
 
-        logger.debug('Connected to serial device : %s' % self)
+        logger.debug('Connected to serial device : %s' % self.__str__())
         return True
 
     def disconnect(self):

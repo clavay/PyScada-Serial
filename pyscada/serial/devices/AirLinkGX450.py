@@ -19,16 +19,9 @@ class Handler(GenericDevice):
         if variable_instance.serialvariable.device_property.upper() == 'POWERIN?':
             self.inst.write(str("AT*" + variable_instance.serialvariable.device_property.upper() + "\r\n").encode())
             return self.parse_value(str(self.inst.readall().decode()), variable_instance)
-        elif variable_instance.serialvariable.device_property.upper() == 'BOARDTEMP?':
-            self.inst.write(str("AT*" + variable_instance.serialvariable.device_property.upper() + "\r\n").encode())
+        else:
+            self.inst.write(str("AT" + variable_instance.serialvariable.device_property.upper() + "\r\n").encode())
             return self.parse_value(str(self.inst.readall().decode()), variable_instance)
-        elif variable_instance.serialvariable.device_property.upper() == 'HWTEMP?':
-            self.inst.write(str("AT*" + variable_instance.serialvariable.device_property.upper() + "\r\n").encode())
-            return self.parse_value(str(self.inst.readall().decode()), variable_instance)
-        elif variable_instance.serialvariable.device_property.upper() == 'NETRSSI?':
-            self.inst.write(str("AT*" + variable_instance.serialvariable.device_property.upper() + "\r\n").encode())
-            return self.parse_value(str(self.inst.readall().decode()), variable_instance)
-        return None
 
     def write_data(self, variable_id, value, task):
         """
@@ -51,10 +44,6 @@ class Handler(GenericDevice):
         takes a string in the AirLink GX450 format and returns a float value or None if not parseable
         """
         try:
-            value.replace(str("AT*" + variable_instance.serialvariable.device_property.upper() + "\r\n"), '')
-            value.replace('\r\nOK\r\n', '')
-            value.replace('\r', '')
-            value.replace('\n', '')
-            return float(value)
+            return float(value.split()[1])
         except:
             return None
