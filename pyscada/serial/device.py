@@ -24,7 +24,8 @@ class Device:
     def __init__(self, device):
         self.variables = {}
         self.device = device
-        if self.device.serialdevice.instrument.handler_path is not None:
+        if self.device.serialdevice.instrument is not None \
+                and self.device.serialdevice.instrument.handler_path is not None:
             sys.path.append(self.device.serialdevice.instrument.handler_path)
         try:
             mod = __import__(self.device.serialdevice.instrument.handler_class, fromlist=['Handler'])
@@ -39,6 +40,9 @@ class Device:
             if not hasattr(var, 'serialvariable'):
                 continue
             self.variables[var.pk] = var
+
+        if driver_serial_ok and driver_handler_ok:
+            self._h.connect()
 
     def request_data(self):
 

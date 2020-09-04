@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 from pyscada.models import Device
 from pyscada.models import Variable
 
+import serial
+
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 import logging
@@ -16,17 +18,21 @@ class SerialDevice(models.Model):
     serial_device = models.OneToOneField(Device, null=True, blank=True, on_delete=models.CASCADE)
     protocol_choices = ((0, 'serial AT'),)
     protocol = models.PositiveSmallIntegerField(default=0, choices=protocol_choices)
-    port = models.CharField(default='502',
+    port = models.CharField(default='/dev/ttyAMA0',
                             max_length=400,
                             help_text="enter serial port (/dev/pts/13))")
     timeout = models.PositiveSmallIntegerField(default=0, help_text="0 use default, else value in seconds")
-    stopbits_choices = ((0, 'default'), (1, 'one stopbit'), (2, '2 stopbits'),)
-    stopbits = models.PositiveSmallIntegerField(default=0, choices=stopbits_choices)
-    bytesize_choices = ((0, 'default'), (5, 'FIVEBITS'), (6, 'SIXBITS'), (7, 'SEVENBITS'), (8, 'EIGHTBITS'),)
-    bytesize = models.PositiveSmallIntegerField(default=0, choices=bytesize_choices)
-    parity_choices = ((0, 'default'), (1, 'NONE'), (2, 'EVEN'), (3, 'ODD'),)
-    parity = models.PositiveSmallIntegerField(default=0, choices=parity_choices)
-    baudrate = models.PositiveIntegerField(default=0, help_text="0 use default")
+    stopbits_choices = ((serial.STOPBITS_ONE, 'one stopbit'),
+                        (serial.STOPBITS_ONE_POINT_FIVE, 'one point five stopbit'),
+                        (serial.STOPBITS_TWO, '2 stopbits'),)
+    stopbits = models.CharField(default=serial.STOPBITS_ONE, max_length=254, choices=stopbits_choices)
+    bytesize_choices = ((serial.FIVEBITS, 'FIVEBITS'), (serial.SIXBITS, 'SIXBITS'),
+                        (serial.SEVENBITS, 'SEVENBITS'), (serial.EIGHTBITS, 'EIGHTBITS'),)
+    bytesize = models.CharField(default=serial.EIGHTBITS, max_length=254, choices=bytesize_choices)
+    parity_choices = ((serial.PARITY_NONE, 'NONE'), (serial.PARITY_EVEN, 'EVEN'), (serial.PARITY_ODD, 'ODD'),
+                      (serial.PARITY_MARK, 'MARK'), (serial.PARITY_SPACE, 'SPACE'),)
+    parity = models.CharField(default=serial.PARITY_NONE, max_length=254, choices=parity_choices)
+    baudrate = models.PositiveIntegerField(default=9600, help_text="0 use default")
     instrument = models.ForeignKey('SerialDeviceHandler', null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
