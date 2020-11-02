@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from pyscada.serial.devices import GenericDevice
-from pyscada.models import VariableProperty
 
 
 class Handler(GenericDevice):
@@ -16,30 +15,23 @@ class Handler(GenericDevice):
         """
         if self.inst is None:
             return
-        if variable_instance.serialvariable.device_property.upper() == 'POWERIN?':
-            self.inst.write(str("AT*" + variable_instance.serialvariable.device_property.upper() + "\r\n").encode())
-            return self.parse_value(str(self.inst.readall().decode()), variable_instance)
+        if variable_instance.serialvariable.device_property.upper() == 'SMSM2M':
+            return None
         else:
             self.inst.write(str("AT" + variable_instance.serialvariable.device_property.upper() + "\r\n").encode())
-            return self.parse_value(str(self.inst.readall().decode()), variable_instance)
+            return self.parse_value(str(self.inst.readall().decode()))
 
     def write_data(self, variable_id, value, task):
         """
         write values to the device
         """
         variable = self._variables[variable_id]
-        if task.property_name != '':
-            # write the freq property to VariableProperty use that for later read
-            vp = VariableProperty.objects.update_or_create_property(variable=variable, name=task.property_name.upper(),
-                                                                    value=value, value_class='FLOAT64')
-            return True
-        if variable.serialvariable.variable_type == 0:  # configuration
-            # only write to configuration variables
-            pass
-        else:
-            return False
+        if variable.serialvariable.device_property.upper() == 'SMSM2M':
+            return self.parse_value(str(self.inst.readall().decode()))
+        self.inst.write(str('AT*' + variable.serialvariable.device_property.upper() + '="' + value + '"\r\n').encode())
+        return self.parse_value(str(self.inst.readall().decode()))
 
-    def parse_value(self, value, variable_instance):
+    def parse_value(self, value):
         """
         takes a string in the AirLink GX450 format and returns a float value or None if not parseable
         """

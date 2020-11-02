@@ -28,11 +28,17 @@ class GenericDevice:
             logger.error("Cannot import serial")
             return False
 
-        self.inst = serial.Serial(port=self._device.serialdevice.port, baudrate=self._device.serialdevice.baudrate,
-                                  bytesize=self._device.serialdevice.bytesize, parity=self._device.serialdevice.parity,
-                                  stopbits=self._device.serialdevice.stopbits,
-                                  timeout=self._device.serialdevice.timeout,
-                                  write_timeout=self._device.serialdevice.timeout)
+        try:
+            self.inst = serial.Serial(port=self._device.serialdevice.port,
+                                      baudrate=self._device.serialdevice.baudrate,
+                                      bytesize=self._device.serialdevice.bytesize,
+                                      parity=self._device.serialdevice.parity,
+                                      stopbits=self._device.serialdevice.stopbits,
+                                      timeout=self._device.serialdevice.timeout,
+                                      write_timeout=self._device.serialdevice.timeout)
+        except serial.serialutil.SerialException as e:
+            logger.debug(e)
+            return False
 
         logger.debug('Connected to serial device : %s' % self.__str__())
         return True
