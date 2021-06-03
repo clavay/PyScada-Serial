@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from pyscada.models import Device
+from pyscada.models import Device, DeviceHandler
 from pyscada.models import Variable
+from . import PROTOCOL_ID
 
 import serial
 
@@ -32,7 +33,12 @@ class SerialDevice(models.Model):
                       (serial.PARITY_MARK, 'MARK'), (serial.PARITY_SPACE, 'SPACE'),)
     parity = models.CharField(default=serial.PARITY_NONE, max_length=254, choices=parity_choices)
     baudrate = models.PositiveIntegerField(default=9600, help_text="0 use default")
-    instrument = models.ForeignKey('SerialDeviceHandler', null=True, on_delete=models.SET_NULL)
+    instrument_handler = models.ForeignKey(DeviceHandler, null=True, on_delete=models.SET_NULL)
+
+    protocol_id = PROTOCOL_ID
+
+    def parent_device(self):
+        return self.serial_device
 
     def __str__(self):
         return self.serial_device.short_name
@@ -44,20 +50,10 @@ class SerialVariable(models.Model):
     device_property = models.CharField(default='present_value', max_length=255,
                                        help_text='name of the Property the variable be assigned to')
 
+    protocol_id = PROTOCOL_ID
+
     def __str__(self):
         return self.id.__str__() + "-" + self.serial_variable.short_name
-
-
-@python_2_unicode_compatible
-class SerialDeviceHandler(models.Model):
-    name = models.CharField(default='', max_length=255)
-    handler_class = models.CharField(default='pyscada.serial.devices.AirLinkGX450', max_length=255,
-                                     help_text='a Base class to extend can be found at '
-                                               'pyscada.serial.devices.GenericDevice')
-    handler_path = models.CharField(default=None, max_length=255, null=True, blank=True, help_text='')  # todo help
-
-    def __str__(self):
-        return self.name
 
 
 class ExtendedSerialDevice(Device):

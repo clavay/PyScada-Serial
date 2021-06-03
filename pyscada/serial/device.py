@@ -24,11 +24,11 @@ class Device:
     def __init__(self, device):
         self.variables = {}
         self.device = device
-        if self.device.serialdevice.instrument is not None \
-                and self.device.serialdevice.instrument.handler_path is not None:
-            sys.path.append(self.device.serialdevice.instrument.handler_path)
+        if self.device.serialdevice.instrument_handler is not None \
+                and self.device.serialdevice.instrument_handler.handler_path is not None:
+            sys.path.append(self.device.serialdevice.instrument_handler.handler_path)
         try:
-            mod = __import__(self.device.serialdevice.instrument.handler_class, fromlist=['Handler'])
+            mod = __import__(self.device.serialdevice.instrument_handler.handler_class, fromlist=['Handler'])
             device_handler = getattr(mod, 'Handler')
             self._h = device_handler(self.device, self.variables)
             driver_handler_ok = True
@@ -42,6 +42,7 @@ class Device:
             self.variables[var.pk] = var
 
         if driver_serial_ok and driver_handler_ok:
+            logger.error("serial connect")
             self._h.connect()
 
     def request_data(self):

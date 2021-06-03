@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from pyscada.serial import PROTOCOL_ID
-from pyscada.serial.models import SerialDevice, ExtendedSerialDevice, SerialDeviceHandler
+from pyscada.serial.models import SerialDevice, ExtendedSerialDevice
 from pyscada.serial.models import SerialVariable, ExtendedSerialVariable
 from pyscada.admin import DeviceAdmin
 from pyscada.admin import VariableAdmin
@@ -59,6 +59,5 @@ class SerialVariableAdmin(VariableAdmin):
     ]
 
 
-admin_site.register(ExtendedSerialDevice, SerialDeviceAdmin)
-admin_site.register(ExtendedSerialVariable, SerialVariableAdmin)
-admin_site.register(SerialDeviceHandler)
+# admin_site.register(ExtendedSerialDevice, SerialDeviceAdmin)
+# admin_site.register(ExtendedSerialVariable, SerialVariableAdmin)

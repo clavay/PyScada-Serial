@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from .. import PROTOCOL_ID
+from pyscada.models import DeviceProtocol
 
 try: 
     import serial
@@ -7,6 +9,8 @@ try:
 except ImportError:
     serial = None
     driver_ok = False
+
+from time import time
 
 import logging
 
@@ -26,6 +30,12 @@ class GenericDevice:
         """
         if not driver_ok:
             logger.error("Cannot import serial")
+            return False
+
+        if self._device.protocol.id != PROTOCOL_ID:
+            logger.error("Wrong handler selected : it's for %s device while device protocol is %s" %
+                         (str(DeviceProtocol.objects.get(id=PROTOCOL_ID)).upper(),
+                          str(self._device.protocol).upper()))
             return False
 
         try:
@@ -50,6 +60,18 @@ class GenericDevice:
             return True
         return False
 
+    def before_read(self):
+        """
+        will be called before the first read_data
+        """
+        return None
+
+    def after_read(self):
+        """
+        will be called after the last read_data
+        """
+        return None
+
     def read_data(self, variable_instance):
         """
         read values from the device
@@ -57,8 +79,18 @@ class GenericDevice:
 
         return None
 
+    def read_data_and_time(self, variable_instance):
+        """
+        read values and timestamps from the device
+        """
+
+        return self.read_data(variable_instance), self.time()
+
     def write_data(self, variable_id, value, task):
         """
         write values to the device
         """
         return False
+
+    def time(self):
+        return time()
