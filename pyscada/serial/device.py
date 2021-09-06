@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from time import time
+from time import time, sleep
 
 import sys
 
@@ -42,8 +42,10 @@ class Device:
             self.variables[var.pk] = var
 
         if driver_serial_ok and driver_handler_ok:
-            logger.error("serial connect")
-            self._h.connect()
+            # logger.error("serial connect")
+            if not self._h.connect():
+                sleep(60)
+                self._h.connect()
 
     def request_data(self):
 

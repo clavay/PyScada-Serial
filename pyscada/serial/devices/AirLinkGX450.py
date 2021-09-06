@@ -2,6 +2,11 @@
 from __future__ import unicode_literals
 
 from pyscada.serial.devices import GenericDevice
+from serial.serialutil import SerialException
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Handler(GenericDevice):
@@ -19,7 +24,15 @@ class Handler(GenericDevice):
             return None
         else:
             self.inst.write(str("AT" + variable_instance.serialvariable.device_property.upper() + "\r\n").encode())
-            return self.parse_value(str(self.inst.readall().decode()))
+            try:
+                value = self.parse_value(str(self.inst.readall().decode()))
+            except SerialException as e:
+                logger.info("Serial Exception reading %s from %s : %s"
+                            % (variable_instance.serialvariable.device_property.upper(),
+                               variable_instance.device,
+                               str(e)))
+                value = None
+            return value
 
     def write_data(self, variable_id, value, task):
         """
@@ -28,8 +41,15 @@ class Handler(GenericDevice):
         variable = self._variables[variable_id]
         if variable.serialvariable.device_property.upper() == 'SMSM2M':
             return self.parse_value(str(self.inst.readall().decode()))
-        self.inst.write(str('AT*' + variable.serialvariable.device_property.upper() + '="' + value + '"\r\n').encode())
-        return self.parse_value(str(self.inst.readall().decode()))
+        try:
+            value = self.parse_value(str(self.inst.readall().decode()))
+        except SerialException as e:
+            logger.info("Serial Exception reading %s from %s : %s"
+                        % (variable.serialvariable.device_property.upper(),
+                           variable.device,
+                           str(e)))
+            value = None
+        return value
 
     def parse_value(self, value):
         """
