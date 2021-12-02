@@ -38,7 +38,10 @@ class SerialDevice(models.Model):
     protocol_id = PROTOCOL_ID
 
     def parent_device(self):
-        return self.serial_device
+        try:
+            return self.serial_device
+        except:
+            return None
 
     def __str__(self):
         return self.serial_device.short_name
