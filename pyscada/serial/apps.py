@@ -10,6 +10,7 @@ class PyScadaSerialConfig(AppConfig):
     name = 'pyscada.serial'
     verbose_name = _("PyScada Serial")
     path = os.path.dirname(os.path.realpath(__file__))
+    default_auto_field = 'django.db.models.AutoField'
 
     def ready(self):
         import pyscada.serial.signals

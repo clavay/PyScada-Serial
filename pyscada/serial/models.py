@@ -8,13 +8,11 @@ from . import PROTOCOL_ID
 import serial
 
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-@python_2_unicode_compatible
 class SerialDevice(models.Model):
     serial_device = models.OneToOneField(Device, null=True, blank=True, on_delete=models.CASCADE)
     protocol_choices = ((0, 'serial AT'),)
@@ -47,7 +45,6 @@ class SerialDevice(models.Model):
         return self.serial_device.short_name
 
 
-@python_2_unicode_compatible
 class SerialVariable(models.Model):
     serial_variable = models.OneToOneField(Variable, null=True, blank=True, on_delete=models.CASCADE)
     device_property = models.CharField(default='present_value', max_length=255,
