@@ -10,6 +10,7 @@ try:
     import serial
     driver_serial_ok = True
 except ImportError:
+    logger.error('Cannot import serial')
     driver_serial_ok = False
 
 logger = logging.getLogger(__name__)
@@ -31,9 +32,9 @@ class Device:
             mod = __import__(self.device.serialdevice.instrument_handler.handler_class, fromlist=['Handler'])
             device_handler = getattr(mod, 'Handler')
             self._h = device_handler(self.device, self.variables)
-            driver_handler_ok = True
+            self.driver_handler_ok = True
         except ImportError:
-            driver_handler_ok = False
+            self.driver_handler_ok = False
             logger.error("Handler import error : %s" % self.device.short_name)
 
         for var in self.device.variable_set.filter(active=1):
@@ -41,7 +42,7 @@ class Device:
                 continue
             self.variables[var.pk] = var
 
-        if driver_serial_ok and driver_handler_ok:
+        if driver_serial_ok and self.driver_handler_ok:
             # logger.error("serial connect")
             if not self._h.connect():
                 sleep(60)
@@ -51,8 +52,7 @@ class Device:
 
         output = []
 
-        if not driver_serial_ok:
-            logger.info('Cannot import serial')
+        if not driver_serial_ok or not self.driver_handler_ok:
             return output
 
         for item in self.variables.values():
