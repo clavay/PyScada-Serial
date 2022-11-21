@@ -5,6 +5,7 @@ from time import time, sleep
 import sys
 
 import logging
+logger = logging.getLogger(__name__)
 
 try:
     import serial
@@ -13,7 +14,6 @@ except ImportError:
     logger.error('Cannot import serial')
     driver_serial_ok = False
 
-logger = logging.getLogger(__name__)
 _debug = 1
 
 
@@ -54,6 +54,8 @@ class Device:
 
         if not driver_serial_ok or not self.driver_handler_ok:
             return output
+        if driver_serial_ok and self.driver_handler_ok and self._h.inst is None:
+            self._h.connect()
 
         for item in self.variables.values():
             value = self._h.read_data(item)
@@ -70,15 +72,15 @@ class Device:
 
         output = []
         if not driver_serial_ok:
-            logger.info("Cannot import serial")
+            logger.error("Cannot import serial")
             return output
 
         for item in self.variables:
-            if item.id == variable_id:
-                if not item.writeable:
+            if self.variables[item].id == variable_id:
+                if not self.variables[item].writeable:
                     return False
                 read_value = self._h.write_data(variable_id, value, task)
-                if read_value is not None and item.update_value(read_value, time()):
-                    output.append(item.create_recorded_data_element())
+                if read_value is not None and self.variables[item].update_value(read_value, time()):
+                    output.append(self.variables[item].create_recorded_data_element())
 
         return output
