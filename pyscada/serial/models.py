@@ -53,7 +53,7 @@ class SerialVariable(models.Model):
     protocol_id = PROTOCOL_ID
 
     def __str__(self):
-        return self.id.__str__() + "-" + self.serial_variable.short_name
+        return self.id.__str__() + "-" + self.serial_variable.name
 
 
 class ExtendedSerialDevice(Device):
