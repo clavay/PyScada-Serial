@@ -31,7 +31,6 @@ class SerialDevice(models.Model):
                       (serial.PARITY_MARK, 'MARK'), (serial.PARITY_SPACE, 'SPACE'),)
     parity = models.CharField(default=serial.PARITY_NONE, max_length=254, choices=parity_choices)
     baudrate = models.PositiveIntegerField(default=9600, help_text="0 use default")
-    instrument_handler = models.ForeignKey(DeviceHandler, null=True, on_delete=models.SET_NULL)
 
     protocol_id = PROTOCOL_ID
 
