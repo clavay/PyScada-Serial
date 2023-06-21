@@ -15,7 +15,7 @@ try:
     import serial
     driver_ok = True
 except ImportError:
-    logger.error('Cannot import serial')
+    logger.error('Cannot import serial', exc_info=True)
     driver_ok = False
 
 
@@ -41,7 +41,6 @@ class Device(GenericDevice):
 
         output = []
         if not self.driver_ok:
-            logger.error("Cannot import serial")
             return output
 
         self._h.connect()
