@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('serial', '0013_devicehandler_migration'),
+        ("serial", "0013_devicehandler_migration"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='serialdevice',
-            name='instrument_handler',
+            model_name="serialdevice",
+            name="instrument_handler",
         ),
     ]

@@ -4,13 +4,12 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('serial', '0011_remove_serialdevice_instrument'),
+        ("serial", "0011_remove_serialdevice_instrument"),
     ]
 
     operations = [
         migrations.DeleteModel(
-            name='SerialDeviceHandler',
+            name="SerialDeviceHandler",
         ),
     ]

@@ -4,8 +4,9 @@ from .. import PROTOCOL_ID
 from pyscada.models import DeviceProtocol
 from pyscada.device import GenericHandlerDevice
 
-try: 
+try:
     import serial
+
     driver_ok = True
 except ImportError:
     serial = None
@@ -32,13 +33,15 @@ class GenericDevice(GenericHandlerDevice):
         result = True
 
         try:
-            self.inst = serial.Serial(port=self._device.serialdevice.port,
-                                      baudrate=self._device.serialdevice.baudrate,
-                                      bytesize=self._device.serialdevice.bytesize,
-                                      parity=self._device.serialdevice.parity,
-                                      stopbits=self._device.serialdevice.stopbits,
-                                      timeout=self._device.serialdevice.timeout,
-                                      write_timeout=self._device.serialdevice.timeout)
+            self.inst = serial.Serial(
+                port=self._device.serialdevice.port,
+                baudrate=self._device.serialdevice.baudrate,
+                bytesize=self._device.serialdevice.bytesize,
+                parity=self._device.serialdevice.parity,
+                stopbits=self._device.serialdevice.stopbits,
+                timeout=self._device.serialdevice.timeout,
+                write_timeout=self._device.serialdevice.timeout,
+            )
         except serial.serialutil.SerialException as e:
             logger.debug(e)
             result = False

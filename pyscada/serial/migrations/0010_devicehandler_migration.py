@@ -15,10 +15,13 @@ def move_serial_device_handlers(apps, schema_editor):
     items = []
     count = 0
     for item in SerialHandler.objects.using(schema_editor.connection.alias).all():
-        items.append(Handler(name=item.name,
-                             handler_class=item.handler_class,
-                             handler_path=item.handler_path,
-                             ))
+        items.append(
+            Handler(
+                name=item.name,
+                handler_class=item.handler_class,
+                handler_path=item.handler_path,
+            )
+        )
         count += 1
 
     Handler.objects.bulk_create(items)
@@ -27,24 +30,27 @@ def move_serial_device_handlers(apps, schema_editor):
     for item in SerialHandler.objects.using(schema_editor.connection.alias).all():
         for device in SerialDevice.objects.using(schema_editor.connection.alias).all():
             if device.instrument == item:
-                device.instrument_handler = Handler.objects.filter(name=item.name,
-                                                                   handler_class=item.handler_class,
-                                                                   handler_path=item.handler_path,).first()
+                device.instrument_handler = Handler.objects.filter(
+                    name=item.name,
+                    handler_class=item.handler_class,
+                    handler_path=item.handler_path,
+                ).first()
                 devices.append(device)
 
         # item.delete()
-    SerialDevice.objects.bulk_update(devices, ['instrument_handler'])
+    SerialDevice.objects.bulk_update(devices, ["instrument_handler"])
 
-    logger.info('moved %d SerialHandler\n' % count)
+    logger.info("moved %d SerialHandler\n" % count)
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('pyscada', '0079_devicehandler'),
-        ('serial', '0009_serialdevice_instrument_handler')
+        ("pyscada", "0079_devicehandler"),
+        ("serial", "0009_serialdevice_instrument_handler"),
     ]
 
     operations = [
-        migrations.RunPython(move_serial_device_handlers, reverse_code=migrations.RunPython.noop),
+        migrations.RunPython(
+            move_serial_device_handlers, reverse_code=migrations.RunPython.noop
+        ),
     ]

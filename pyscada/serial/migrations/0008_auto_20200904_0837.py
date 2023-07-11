@@ -4,20 +4,34 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('serial', '0007_auto_20200904_0832'),
+        ("serial", "0007_auto_20200904_0832"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='serialdevice',
-            name='bytesize',
-            field=models.PositiveSmallIntegerField(choices=[(5, 'FIVEBITS'), (6, 'SIXBITS'), (7, 'SEVENBITS'), (8, 'EIGHTBITS')], default=8),
+            model_name="serialdevice",
+            name="bytesize",
+            field=models.PositiveSmallIntegerField(
+                choices=[
+                    (5, "FIVEBITS"),
+                    (6, "SIXBITS"),
+                    (7, "SEVENBITS"),
+                    (8, "EIGHTBITS"),
+                ],
+                default=8,
+            ),
         ),
         migrations.AlterField(
-            model_name='serialdevice',
-            name='stopbits',
-            field=models.FloatField(choices=[(1, 'one stopbit'), (1.5, 'one point five stopbit'), (2, '2 stopbits')], default=1),
+            model_name="serialdevice",
+            name="stopbits",
+            field=models.FloatField(
+                choices=[
+                    (1, "one stopbit"),
+                    (1.5, "one point five stopbit"),
+                    (2, "2 stopbits"),
+                ],
+                default=1,
+            ),
         ),
     ]

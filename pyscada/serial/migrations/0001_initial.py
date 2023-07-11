@@ -5,52 +5,81 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('pyscada', '0059_auto_20200211_1049'),
+        ("pyscada", "0059_auto_20200211_1049"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ExtendedSerialDevice',
-            fields=[
-            ],
+            name="ExtendedSerialDevice",
+            fields=[],
             options={
-                'verbose_name': 'Serial Device',
-                'verbose_name_plural': 'Serial Devices',
-                'proxy': True,
-                'indexes': [],
-                'constraints': [],
+                "verbose_name": "Serial Device",
+                "verbose_name_plural": "Serial Devices",
+                "proxy": True,
+                "indexes": [],
+                "constraints": [],
             },
-            bases=('pyscada.device',),
+            bases=("pyscada.device",),
         ),
         migrations.CreateModel(
-            name='ExtendedSerialVariable',
-            fields=[
-            ],
+            name="ExtendedSerialVariable",
+            fields=[],
             options={
-                'verbose_name': 'Serial Variable',
-                'verbose_name_plural': 'Serial Variables',
-                'proxy': True,
-                'indexes': [],
-                'constraints': [],
+                "verbose_name": "Serial Variable",
+                "verbose_name_plural": "Serial Variables",
+                "proxy": True,
+                "indexes": [],
+                "constraints": [],
             },
-            bases=('pyscada.variable',),
+            bases=("pyscada.variable",),
         ),
         migrations.CreateModel(
-            name='SerialVariable',
+            name="SerialVariable",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('serial_variable', models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='pyscada.Variable')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "serial_variable",
+                    models.OneToOneField(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="pyscada.Variable",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='SerialDevice',
+            name="SerialDevice",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('serial_device', models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='pyscada.Device')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "serial_device",
+                    models.OneToOneField(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="pyscada.Device",
+                    ),
+                ),
             ],
         ),
     ]

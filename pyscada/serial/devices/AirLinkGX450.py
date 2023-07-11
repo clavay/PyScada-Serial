@@ -20,17 +20,27 @@ class Handler(GenericDevice):
         """
         if self.inst is None:
             return
-        if variable_instance.serialvariable.device_property.upper() == 'SMSM2M':
+        if variable_instance.serialvariable.device_property.upper() == "SMSM2M":
             return None
         else:
-            self.inst.write(str("AT" + variable_instance.serialvariable.device_property.upper() + "\r\n").encode())
+            self.inst.write(
+                str(
+                    "AT"
+                    + variable_instance.serialvariable.device_property.upper()
+                    + "\r\n"
+                ).encode()
+            )
             try:
                 value = self.parse_value(str(self.inst.readall().decode()))
             except SerialException as e:
-                logger.info("Serial Exception reading %s from %s : %s"
-                            % (variable_instance.serialvariable.device_property.upper(),
-                               variable_instance.device,
-                               str(e)))
+                logger.info(
+                    "Serial Exception reading %s from %s : %s"
+                    % (
+                        variable_instance.serialvariable.device_property.upper(),
+                        variable_instance.device,
+                        str(e),
+                    )
+                )
                 value = None
             return value
 
@@ -39,15 +49,19 @@ class Handler(GenericDevice):
         write values to the device
         """
         variable = self._variables[variable_id]
-        if variable.serialvariable.device_property.upper() == 'SMSM2M':
+        if variable.serialvariable.device_property.upper() == "SMSM2M":
             return self.parse_value(str(self.inst.readall().decode()))
         try:
             value = self.parse_value(str(self.inst.readall().decode()))
         except SerialException as e:
-            logger.info("Serial Exception reading %s from %s : %s"
-                        % (variable.serialvariable.device_property.upper(),
-                           variable.device,
-                           str(e)))
+            logger.info(
+                "Serial Exception reading %s from %s : %s"
+                % (
+                    variable.serialvariable.device_property.upper(),
+                    variable.device,
+                    str(e),
+                )
+            )
             value = None
         return value
 

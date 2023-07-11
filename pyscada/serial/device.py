@@ -9,13 +9,15 @@ from time import time, sleep
 import sys
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 try:
     import serial
+
     driver_ok = True
 except ImportError:
-    logger.error('Cannot import serial', exc_info=True)
+    logger.error("Cannot import serial", exc_info=True)
     driver_ok = False
 
 
@@ -30,7 +32,7 @@ class Device(GenericDevice):
         super().__init__(device)
 
         for var in self.device.variable_set.filter(active=1):
-            if not hasattr(var, 'serialvariable'):
+            if not hasattr(var, "serialvariable"):
                 continue
             self.variables[var.pk] = var
 

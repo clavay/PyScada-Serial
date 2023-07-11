@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('serial', '0003_auto_20200903_1507'),
+        ("serial", "0003_auto_20200903_1507"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='serialdevice',
-            name='baudrate',
-            field=models.PositiveIntegerField(default=0, help_text='0 use default'),
+            model_name="serialdevice",
+            name="baudrate",
+            field=models.PositiveIntegerField(default=0, help_text="0 use default"),
         ),
     ]
